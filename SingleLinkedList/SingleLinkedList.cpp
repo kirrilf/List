@@ -1,6 +1,8 @@
 ﻿
 #include "pch.h"
 #include <iostream>
+#include <string>
+#include <conio.h>
 
 using namespace std;
 
@@ -96,8 +98,16 @@ void DeleteElementToListByNumber(int numberOfElement) {
 		temp = temp->next;
 	}
 
-	temp1->next = temp3;
+	
+	if (temp2->next == NULL) {
+		lastElement = temp1;
+		temp1->next = NULL;
+	}
+	else {
+		temp1->next = temp3;
+	}
 	delete temp2;
+
 
 }
 
@@ -111,6 +121,7 @@ void DeleteFirstElement() {
 	firstElement = temp2;
 }
 
+
 void DeleteAllSingleLinkedList() {
 	SingleLinkedList *temp1 = new SingleLinkedList;
 	SingleLinkedList *temp2 = new SingleLinkedList;
@@ -120,6 +131,8 @@ void DeleteAllSingleLinkedList() {
 		temp1 = temp1->next;
 		delete temp2;
 	}
+	firstElement = NULL;
+	lastElement = NULL;
 }
 
 void ShowSingleLinkedList() {
@@ -131,8 +144,94 @@ void ShowSingleLinkedList() {
 	}
 }
 
+int menu() {
+	int k = 1, num = 1;
+
+	string A = "1 CREATE A LIST        ", 
+		   B = "2 ADD TO END OF LIST   ",
+		   C = "3 ADD BY ITEM NUMBER   ",
+		   D = "4 DELETE BY ITEM NUMBER",
+		   E = "5 DELETE LIST          ";
+
+	cout << A << "<---\n";
+	cout << B << "\n";
+	cout << C << "\n";
+	cout << D << "\n";
+	cout << E << "\n";
 
 
+	while (true) {
+
+		int l = _getch(), c = _getch();
+		system("cls");
+
+		if (c == 80) {
+			k++;
+		}
+
+		else if (c == 72) {
+			k--;
+		}
+
+
+		if (k == 5) {
+			k = 1;
+		}
+
+		else if (k == 0) {
+			k = 4;
+		}
+
+		if (l == 13) {
+			return k;
+		}
+
+
+		if (l == 49) {
+			return 1;
+		}
+		else if (l == 50) {
+			return 2;
+		}
+		else if (l == 51) {
+			return 3;
+		}
+		else if (l == 52) {
+			return 4;
+		}
+
+
+
+		if (k == 1) {
+			cout << A << "<---\n";
+			cout << B << "\n";
+			cout << C << "\n";
+			cout << D << "\n";
+		}
+		else if (k == 2) {
+			cout << A << "\n";
+			cout << B << "<---\n";
+			cout << C << "\n";
+			cout << D << "\n";
+		}
+		else if (k == 3) {
+			cout << A << "\n";
+			cout << B << "\n";
+			cout << C << "<---\n";
+			cout << D << "\n";
+		}
+		else if (k == 4) {
+			cout << A << "\n";
+			cout << B << "\n";
+			cout << C << "\n";
+			cout << D << "<---\n";
+		}
+
+
+
+	}
+
+}
 
 int main()
 {
@@ -155,6 +254,18 @@ int main()
 	DeleteElementToListByNumber(7);
 	DeleteAllSingleLinkedList();
 	AddElemenToList(3);
+	AddElemenToList(5);
+	AddElemenToList(10);
+	AddElemenToList(11);
+	AddElemenToList(12);
+	AddElemenToList(13);
+	AddElementToListByNumber(14, 2);
+	AddElemenToList(15);
+	AddFirstElement(1);
+	AddElemenToList(16);
+	AddElementToListByNumber(18, 2);
+	DeleteAllSingleLinkedList();
+	AddElemenToList(6);
 	ShowSingleLinkedList();
 
 	
