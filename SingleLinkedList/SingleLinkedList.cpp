@@ -3,8 +3,23 @@
 #include <iostream>
 #include <string>
 #include <conio.h>
+#include <windows.h> 
 
 using namespace std;
+
+
+
+
+void gotoxy(int xpos, int ypos)
+{
+	COORD scrn;
+
+	HANDLE hOuput = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	scrn.X = xpos; scrn.Y = ypos;
+
+	SetConsoleCursorPosition(hOuput, scrn);
+}
 
 
 
@@ -121,7 +136,6 @@ void DeleteFirstElement() {
 	firstElement = temp2;
 }
 
-
 void DeleteAllSingleLinkedList() {
 	SingleLinkedList *temp1 = new SingleLinkedList;
 	SingleLinkedList *temp2 = new SingleLinkedList;
@@ -139,25 +153,42 @@ void ShowSingleLinkedList() {
 	SingleLinkedList *temp = new SingleLinkedList;
 	temp = firstElement;
 	while (temp) {
-		cout << temp->number << endl;
+		cout << temp->number << " ";
 		temp = temp->next;
 	}
 }
 
-int menu() {
+void ShowSingleLinkedListInMenu(int count) {
+	if (count != 0) {
+		gotoxy(0, 6);
+		cout << "List: ";
+		ShowSingleLinkedList();
+		gotoxy(0, 7);
+		cout << "Count: " << count;
+		gotoxy(0, 0);
+	}
+
+}
+
+
+
+int menu(int count) {
 	int k = 1, num = 1;
 
-	string A = "1 CREATE A LIST        ", 
-		   B = "2 ADD TO END OF LIST   ",
-		   C = "3 ADD BY ITEM NUMBER   ",
-		   D = "4 DELETE BY ITEM NUMBER",
-		   E = "5 DELETE LIST          ";
+	string A = "1 CREATE A LIST         ", 
+		   B = "2 ADD TO END OF LIST    ",
+		   C = "3 ADD BY ITEM NUMBER    ",
+		   D = "4 DELETE BY ITEM NUMBER ",
+		   E = "5 DELETE LIST           ";
 
+	system("cls");
 	cout << A << "<---\n";
 	cout << B << "\n";
 	cout << C << "\n";
 	cout << D << "\n";
 	cout << E << "\n";
+	ShowSingleLinkedListInMenu(count);
+
 
 
 	while (true) {
@@ -174,12 +205,12 @@ int menu() {
 		}
 
 
-		if (k == 5) {
+		if (k == 6) {
 			k = 1;
 		}
 
 		else if (k == 0) {
-			k = 4;
+			k = 5;
 		}
 
 		if (l == 13) {
@@ -199,6 +230,9 @@ int menu() {
 		else if (l == 52) {
 			return 4;
 		}
+		else if (l == 53) {
+			return 5;
+		}
 
 
 
@@ -207,24 +241,40 @@ int menu() {
 			cout << B << "\n";
 			cout << C << "\n";
 			cout << D << "\n";
+			cout << E << "\n";
+			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 2) {
 			cout << A << "\n";
 			cout << B << "<---\n";
 			cout << C << "\n";
 			cout << D << "\n";
+			cout << E << "\n";
+			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 3) {
 			cout << A << "\n";
 			cout << B << "\n";
 			cout << C << "<---\n";
 			cout << D << "\n";
+			cout << E << "\n";
+			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 4) {
 			cout << A << "\n";
 			cout << B << "\n";
 			cout << C << "\n";
 			cout << D << "<---\n";
+			cout << E << "\n";
+			ShowSingleLinkedListInMenu(count);
+		}
+		else if (k == 5) {
+			cout << A << "\n";
+			cout << B << "\n";
+			cout << C << "\n";
+			cout << D << "\n";
+			cout << E << "<---\n";
+			ShowSingleLinkedListInMenu(count);
 		}
 
 
@@ -233,40 +283,129 @@ int menu() {
 
 }
 
+void StartMenu() {
+	int count = 0;
+
+	while (true) {
+		int g = menu(count);
+
+		if (g == 1 && count == 0) {
+			int num;
+			system("cls");
+			cout << "Enter item: ";
+			cin >> num;
+			AddElemenToList(num);
+			count++;
+		}
+		else if (g == 1 && count != 0) {
+			system("cls");
+			cout << "List already created ";
+			system("pause");
+		}
+		else if (g == 2 && count != 0) {
+			int num;
+			system("cls");
+			cout << "Enter item: ";
+			cin >> num;
+			AddElemenToList(num);
+			count++;
+		}
+		else if (g == 2 && count == 0) {
+			system("cls");
+			cout << "No List ";
+			system("pause");
+		}
+		else if (g == 3 && count != 0) {
+			int num, numberOfElement;
+			system("cls");
+			cout << "Enter item: ";
+			cin >> num;
+			cout << "Number of item: ";
+			cin >> numberOfElement;
+			if (numberOfElement > 0) {
+
+				if (numberOfElement == 1) {
+					AddFirstElement(num);
+					count++;
+				}
+				else if (numberOfElement == count) {
+					AddElemenToList(num);
+					count++;
+				}
+				else {
+					if (numberOfElement > count) {
+						system("cls");
+						cout << "Number more than the number of items in the list ";
+						system("pause");
+					}
+					else {
+						AddElementToListByNumber(num, numberOfElement);
+						count++;
+					}
+				}
+			}
+			else {
+				system("cls");
+				cout << "Number negative";
+				system("pause");
+			}
+		}
+		else if (g == 3 && count == 0) {
+			system("cls");
+			cout << "No List ";
+			system("pause");
+		}
+		else if (g == 4 && count != 0) {
+			int numberOfElement;
+			cout << "Eneter number of element: ";
+			cin >> numberOfElement;
+			if (numberOfElement <= count && numberOfElement > 0) {
+				if (numberOfElement == 1) {
+					DeleteFirstElement();
+					count--;
+				}
+				else {
+					DeleteElementToListByNumber(numberOfElement);
+					count--;
+				}
+			}
+			else {
+				system("cls");
+				cout << "Item number is less than zero or greater than the number of items in the list ";
+				system("pause");
+			}
+		}
+		else if (g == 4 && count == 0) {
+			system("cls");
+			cout << "No List ";
+			system("pause");
+		}
+		else if (g == 5 && count != 0) {
+			DeleteAllSingleLinkedList();
+			count = 0;
+		}
+		else if (g == 5 && count == 0) {
+			system("cls");
+			cout << "No List ";
+			system("pause");
+		}
+	
+	
+	
+	}
+
+
+
+}
+
+
 int main()
 {
 	
+	StartMenu();
 	
 
-	AddElemenToList(5);
-	AddElemenToList(10);
-	AddElemenToList(11);
-	AddElemenToList(12);
-	AddElemenToList(13);
-	AddElementToListByNumber(14, 2);
-	AddElemenToList(15);
-	AddFirstElement(1);
-	AddElemenToList(16);
-	AddElementToListByNumber(18, 2);
-	DeleteElementToListByNumber(10);
-	DeleteElementToListByNumber(9);
-	DeleteFirstElement();
-	DeleteElementToListByNumber(7);
-	DeleteAllSingleLinkedList();
-	AddElemenToList(3);
-	AddElemenToList(5);
-	AddElemenToList(10);
-	AddElemenToList(11);
-	AddElemenToList(12);
-	AddElemenToList(13);
-	AddElementToListByNumber(14, 2);
-	AddElemenToList(15);
-	AddFirstElement(1);
-	AddElemenToList(16);
-	AddElementToListByNumber(18, 2);
-	DeleteAllSingleLinkedList();
-	AddElemenToList(6);
-	ShowSingleLinkedList();
+	
 
 	
 
