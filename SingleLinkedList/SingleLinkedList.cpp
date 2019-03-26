@@ -8,8 +8,6 @@
 using namespace std;
 
 
-
-
 void gotoxy(int xpos, int ypos)
 {
 	COORD scrn;
@@ -22,11 +20,11 @@ void gotoxy(int xpos, int ypos)
 }
 
 
-
 struct SingleLinkedList
 {
 	int number;
 	SingleLinkedList *next;
+	SingleLinkedList *previous;
 
 };
 
@@ -37,16 +35,20 @@ SingleLinkedList *lastElement;
 void AddElemenToList(int num)
 {	
 	SingleLinkedList *Element = new SingleLinkedList;
+	SingleLinkedList *temp = new SingleLinkedList;
 	Element->number = num;
 
 	if (firstElement == NULL && firstElement == lastElement) {
 		firstElement = Element;
+		firstElement->previous = NULL;
 		lastElement = Element;
 		lastElement->next = NULL;
 	}
 	else {
 		lastElement->next = Element;
+		temp = lastElement;
 		lastElement = Element;
+		lastElement->previous = temp;
 		lastElement->next = NULL;
 	}
 
@@ -58,6 +60,7 @@ void AddElementToListByNumber(int num, int numberOfElement) {
 	SingleLinkedList *temp = new SingleLinkedList;
 	SingleLinkedList *temp1 = new SingleLinkedList; 
 	SingleLinkedList *temp2 = new SingleLinkedList;
+	SingleLinkedList *temp3 = new SingleLinkedList;
 
 	Element->number = num;
 	temp = firstElement;
@@ -75,17 +78,24 @@ void AddElementToListByNumber(int num, int numberOfElement) {
 	}
 
 	temp1->next = Element;
+	Element->previous = temp1;
 	Element->next = temp2;
+	temp2->previous = Element;
 }
 
 void AddFirstElement(int num) {
 
 	SingleLinkedList *Element = new SingleLinkedList;
+	SingleLinkedList *temp = new SingleLinkedList;
+	temp = firstElement;
 	Element->number = num;
 	Element->next = firstElement;
 	firstElement = Element;
+	firstElement->previous = NULL;
+	temp->previous = Element;
 
 }
+
 
 void DeleteElementToListByNumber(int numberOfElement) {
 
@@ -120,6 +130,7 @@ void DeleteElementToListByNumber(int numberOfElement) {
 	}
 	else {
 		temp1->next = temp3;
+		temp3->previous = temp1;
 	}
 	delete temp2;
 
@@ -134,6 +145,7 @@ void DeleteFirstElement() {
 	temp2 = temp1->next;
 	delete temp1;
 	firstElement = temp2;
+	firstElement->previous = NULL;
 }
 
 void DeleteAllSingleLinkedList() {
@@ -149,14 +161,29 @@ void DeleteAllSingleLinkedList() {
 	lastElement = NULL;
 }
 
+
 void ShowSingleLinkedList() {
 	SingleLinkedList *temp = new SingleLinkedList;
 	temp = firstElement;
+	int i = 1;
 	while (temp) {
-		cout << temp->number << " ";
+		cout << i << ")" <<temp->number << " ";
 		temp = temp->next;
+		i++;
 	}
 }
+
+void ShowSingleLinkedListReverse(int count) {
+	SingleLinkedList *temp = new SingleLinkedList;
+	temp = lastElement;
+	int i = count;
+	while (temp) {
+		cout << i << ")" << temp->number << " ";
+		temp = temp->previous;
+		i--;
+	}
+}
+
 
 void ShowSingleLinkedListInMenu(int count) {
 	if (count != 0) {
@@ -165,11 +192,13 @@ void ShowSingleLinkedListInMenu(int count) {
 		ShowSingleLinkedList();
 		gotoxy(0, 7);
 		cout << "Count: " << count;
+		gotoxy(0, 8);
+		cout << "List Reverse: ";
+		ShowSingleLinkedListReverse(count);
 		gotoxy(0, 0);
 	}
 
 }
-
 
 
 int menu(int count) {
@@ -193,7 +222,10 @@ int menu(int count) {
 
 	while (true) {
 
-		int l = _getch(), c = _getch();
+		int l = _getch(), c = 0;
+		if (l == 224) {
+			c = _getch();
+		}
 		system("cls");
 
 		if (c == 80) {
@@ -400,14 +432,12 @@ void StartMenu() {
 
 
 int main()
-{
-	
+{	
 	StartMenu();
 	
 
 	
 
-	
 
 
 }
