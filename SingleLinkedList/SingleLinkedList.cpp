@@ -4,6 +4,7 @@
 #include <string>
 #include <conio.h>
 #include <windows.h> 
+#include <cmath>
 
 using namespace std;
 
@@ -20,6 +21,7 @@ void gotoxy(int xpos, int ypos)
 }
 
 
+
 struct SingleLinkedList
 {
 	int number;
@@ -30,6 +32,29 @@ struct SingleLinkedList
 
 SingleLinkedList *firstElement;
 SingleLinkedList *lastElement;
+
+int getValue()
+{
+	while (true) // Цикл продолжается до тех пор, пока пользователь не введет корректное значение
+	{
+		int a;
+		cin >> a;
+
+		// Проверка на предыдущее извлечение
+		if (cin.fail()) // если предыдущее извлечение оказалось провальным
+		{
+			cin.clear(); // возвращаем cin в 'обычный' режим работы
+			cin.ignore(32767, '\n'); // и удаляем значения предыдущего ввода из входного буфера
+			cout << "ERROR.  Please try again.\n";
+		}
+		else
+		{
+			cin.ignore(2147483647, '\n'); // удаляем лишние значения
+
+			return a;
+		}
+	}
+}
 
 
 void AddElemenToList(int num)
@@ -97,6 +122,7 @@ void AddFirstElement(int num) {
 }
 
 
+
 void DeleteElementToListByNumber(int numberOfElement) {
 
 	SingleLinkedList *temp = new SingleLinkedList;
@@ -161,6 +187,78 @@ void DeleteAllSingleLinkedList() {
 	lastElement = NULL;
 }
 
+void DeletePlotSingleLinkedList(int start, int finish) {
+	
+	SingleLinkedList *temp = new SingleLinkedList;
+	SingleLinkedList *temp1 = new SingleLinkedList;
+	SingleLinkedList *temp2 = new SingleLinkedList;
+
+
+	temp = firstElement;
+	if (start != 1) {
+		for (int i = 1; i <= finish; i++) {
+			if (i == start - 1) {
+				temp1 = temp;
+				temp = temp->next;
+			}
+			else if (i >= start && i < finish) {
+				if (start == 1) {}
+				temp2 = temp;
+				temp = temp->next;
+				delete temp2;
+			}
+			else if (i == finish) {
+				if (temp->next == NULL) {
+					temp1->next = NULL;
+					delete temp;
+					lastElement = temp1;
+				}
+				else {
+					temp2 = temp;
+					temp = temp->next;
+					temp1->next = temp;
+					temp->previous = temp1;
+					delete temp2;
+				}
+			}
+			else {
+				temp = temp->next;
+			}
+		}
+	}
+	else {
+		for (int i = 1; i <= finish; i++) {
+			if (i == finish) {
+				if (temp->next == NULL) {
+					lastElement = NULL;
+					firstElement = NULL;
+				}
+				else {
+					temp2 = temp;
+					temp = temp->next;
+					temp->previous = NULL;
+					firstElement = temp;
+					delete temp2;
+				}
+			
+			}
+			else {
+				temp2 = temp;
+				temp = temp->next;
+				delete temp2;
+			}
+		
+		
+		}
+	
+	
+	}
+
+
+
+}
+
+
 
 void ShowSingleLinkedList() {
 	SingleLinkedList *temp = new SingleLinkedList;
@@ -184,7 +282,6 @@ void ShowSingleLinkedListReverse(int count) {
 	}
 }
 
-
 void ShowSingleLinkedListInMenu(int count) {
 	if (count != 0) {
 		gotoxy(0, 6);
@@ -201,14 +298,16 @@ void ShowSingleLinkedListInMenu(int count) {
 }
 
 
+
 int menu(int count) {
 	int k = 1, num = 1;
 
-	string A = "1 CREATE A LIST         ", 
-		   B = "2 ADD TO END OF LIST    ",
-		   C = "3 ADD BY ITEM NUMBER    ",
-		   D = "4 DELETE BY ITEM NUMBER ",
-		   E = "5 DELETE LIST           ";
+	string	A = "1 CREATE A LIST          ",
+			B = "2 ADD TO END OF LIST     ",
+			C = "3 ADD BY ITEM NUMBER     ",
+			D = "4 DELETE BY ITEM NUMBER  ",
+			E = "5 DELETE LIST            ",
+			F = "6 DELETE PART OF THE LIST";	
 
 	system("cls");
 	cout << A << "<---\n";
@@ -216,6 +315,7 @@ int menu(int count) {
 	cout << C << "\n";
 	cout << D << "\n";
 	cout << E << "\n";
+	cout << F << "\n";
 	ShowSingleLinkedListInMenu(count);
 
 
@@ -237,12 +337,12 @@ int menu(int count) {
 		}
 
 
-		if (k == 6) {
+		if (k == 7) {
 			k = 1;
 		}
 
 		else if (k == 0) {
-			k = 5;
+			k = 6;
 		}
 
 		if (l == 13) {
@@ -265,6 +365,9 @@ int menu(int count) {
 		else if (l == 53) {
 			return 5;
 		}
+		else if (l == 54) {
+			return 6;
+		}
 
 
 
@@ -274,6 +377,7 @@ int menu(int count) {
 			cout << C << "\n";
 			cout << D << "\n";
 			cout << E << "\n";
+			cout << F << "\n";
 			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 2) {
@@ -282,6 +386,7 @@ int menu(int count) {
 			cout << C << "\n";
 			cout << D << "\n";
 			cout << E << "\n";
+			cout << F << "\n";
 			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 3) {
@@ -290,6 +395,7 @@ int menu(int count) {
 			cout << C << "<---\n";
 			cout << D << "\n";
 			cout << E << "\n";
+			cout << F << "\n";
 			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 4) {
@@ -298,6 +404,7 @@ int menu(int count) {
 			cout << C << "\n";
 			cout << D << "<---\n";
 			cout << E << "\n";
+			cout << F << "\n";
 			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 5) {
@@ -306,7 +413,18 @@ int menu(int count) {
 			cout << C << "\n";
 			cout << D << "\n";
 			cout << E << "<---\n";
+			cout << F << "\n";
 			ShowSingleLinkedListInMenu(count);
+		}
+		else if (k == 6) {
+			cout << A << "\n";
+			cout << B << "\n";
+			cout << C << "\n";
+			cout << D << "\n";
+			cout << E << "\n";
+			cout << F << "<---\n";
+			ShowSingleLinkedListInMenu(count);
+			
 		}
 
 
@@ -320,12 +438,11 @@ void StartMenu() {
 
 	while (true) {
 		int g = menu(count);
-
 		if (g == 1 && count == 0) {
 			int num;
 			system("cls");
 			cout << "Enter item: ";
-			cin >> num;
+			num = getValue();
 			AddElemenToList(num);
 			count++;
 		}
@@ -338,7 +455,7 @@ void StartMenu() {
 			int num;
 			system("cls");
 			cout << "Enter item: ";
-			cin >> num;
+			num = getValue();;
 			AddElemenToList(num);
 			count++;
 		}
@@ -351,9 +468,9 @@ void StartMenu() {
 			int num, numberOfElement;
 			system("cls");
 			cout << "Enter item: ";
-			cin >> num;
+			num = getValue();;
 			cout << "Number of item: ";
-			cin >> numberOfElement;
+			numberOfElement = getValue();;
 			if (numberOfElement > 0) {
 
 				if (numberOfElement == 1) {
@@ -390,7 +507,7 @@ void StartMenu() {
 		else if (g == 4 && count != 0) {
 			int numberOfElement;
 			cout << "Eneter number of element: ";
-			cin >> numberOfElement;
+			numberOfElement = getValue();;
 			if (numberOfElement <= count && numberOfElement > 0) {
 				if (numberOfElement == 1) {
 					DeleteFirstElement();
@@ -421,9 +538,36 @@ void StartMenu() {
 			cout << "No List ";
 			system("pause");
 		}
-	
-	
-	
+		else if (g == 6 && count != 0) {
+			system("cls");
+			int start, finish;
+			cout << "Enter first number: ";
+			start = getValue();;
+			cout << "Enter last number: ";
+			finish = getValue();;
+			if (start <= 0 || finish <= 0 || start > count || finish > count) {
+				cout << "Input Error";
+				system("pause");
+			}
+			else {
+				if (start > finish) {
+					int temp;
+					temp = start;
+					start = finish;
+					finish = temp;
+				}
+				DeletePlotSingleLinkedList(start, finish);
+				count = count - (finish - start) - 1;
+			}
+			
+
+		}
+		else if (g == 6 && count == 0) {
+			system("cls");
+			cout << "No List ";
+			system("pause");
+		}
+			
 	}
 
 
@@ -431,11 +575,18 @@ void StartMenu() {
 }
 
 
+
+
+
+
+
+
+
+
+
 int main()
 {	
 	StartMenu();
-	
-
 	
 
 
