@@ -5,6 +5,8 @@
 #include <conio.h>
 #include <windows.h> 
 #include <cmath>
+#include <fstream>
+#include <fstream>
 
 using namespace std;
 
@@ -284,18 +286,68 @@ void ShowSingleLinkedListReverse(int count) {
 
 void ShowSingleLinkedListInMenu(int count) {
 	if (count != 0) {
-		gotoxy(0, 6);
+		gotoxy(0, 9);
 		cout << "List: ";
 		ShowSingleLinkedList();
-		gotoxy(0, 7);
+		gotoxy(0, 10);
 		cout << "Count: " << count;
-		gotoxy(0, 8);
+		gotoxy(0, 11);
 		cout << "List Reverse: ";
 		ShowSingleLinkedListReverse(count);
 		gotoxy(0, 0);
 	}
 
 }
+
+
+
+void FileWrite() { // ReadOrWrite: true-read, false-write.
+	
+	ofstream File;
+	File.open("D:\\test.dat", ios::binary);
+	if (!File.is_open()){ // Проверили, удалось ли открыть файл{
+		cout << "Открыть файл не удалось! \n";
+		return ;
+	}
+	SingleLinkedList *temp = new SingleLinkedList;
+	temp = firstElement;
+	char ch;
+	while (temp) {
+		ch = temp->number;
+		File.put(ch);
+		temp = temp->next;
+	}
+	File.close();
+	
+}
+
+int FileRead() {
+
+	ifstream File;
+	File.open("D:\\test.dat", ios::binary); // Открыли файл
+	if (!File.is_open()){ // Проверили, удалось ли открыть файл
+		cout << "Открыть файл не удалось! \n";
+		return 0;
+	}
+	char ch;
+
+	DeleteAllSingleLinkedList();
+
+	int i = 0;
+
+	while (File) {
+		File.get(ch);
+
+		AddElemenToList(int(ch));
+		i++;
+	}
+
+	DeleteElementToListByNumber(i);
+	i--;
+
+	return i;
+}
+
 
 
 
@@ -307,7 +359,12 @@ int menu(int count) {
 			C = "3 ADD BY ITEM NUMBER     ",
 			D = "4 DELETE BY ITEM NUMBER  ",
 			E = "5 DELETE LIST            ",
-			F = "6 DELETE PART OF THE LIST";	
+			F = "6 DELETE PART OF THE LIST",
+			G = "7 READ FROM FILE         ",
+			L = "8 WRITE TO FILE          ";
+
+
+
 
 	system("cls");
 	cout << A << "<---\n";
@@ -316,6 +373,8 @@ int menu(int count) {
 	cout << D << "\n";
 	cout << E << "\n";
 	cout << F << "\n";
+	cout << G << "\n";
+	cout << L << "\n";
 	ShowSingleLinkedListInMenu(count);
 
 
@@ -337,12 +396,12 @@ int menu(int count) {
 		}
 
 
-		if (k == 7) {
+		if (k == 9) {
 			k = 1;
 		}
 
 		else if (k == 0) {
-			k = 6;
+			k = 8;
 		}
 
 		if (l == 13) {
@@ -368,6 +427,12 @@ int menu(int count) {
 		else if (l == 54) {
 			return 6;
 		}
+		else if (l == 55) {
+			return 7;
+		}
+		else if (l == 56) {
+			return 8;
+		}
 
 
 
@@ -378,6 +443,8 @@ int menu(int count) {
 			cout << D << "\n";
 			cout << E << "\n";
 			cout << F << "\n";
+			cout << G << "\n";
+			cout << L << "\n";
 			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 2) {
@@ -387,6 +454,8 @@ int menu(int count) {
 			cout << D << "\n";
 			cout << E << "\n";
 			cout << F << "\n";
+			cout << G << "\n";
+			cout << L << "\n";
 			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 3) {
@@ -396,6 +465,8 @@ int menu(int count) {
 			cout << D << "\n";
 			cout << E << "\n";
 			cout << F << "\n";
+			cout << G << "\n";
+			cout << L << "\n";
 			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 4) {
@@ -405,6 +476,8 @@ int menu(int count) {
 			cout << D << "<---\n";
 			cout << E << "\n";
 			cout << F << "\n";
+			cout << G << "\n";
+			cout << L << "\n";
 			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 5) {
@@ -414,6 +487,8 @@ int menu(int count) {
 			cout << D << "\n";
 			cout << E << "<---\n";
 			cout << F << "\n";
+			cout << G << "\n";
+			cout << L << "\n";
 			ShowSingleLinkedListInMenu(count);
 		}
 		else if (k == 6) {
@@ -423,8 +498,31 @@ int menu(int count) {
 			cout << D << "\n";
 			cout << E << "\n";
 			cout << F << "<---\n";
+			cout << G << "\n";
+			cout << L << "\n";
 			ShowSingleLinkedListInMenu(count);
-			
+		}
+		else if (k == 7) {
+			cout << A << "\n";
+			cout << B << "\n";
+			cout << C << "\n";
+			cout << D << "\n";
+			cout << E << "\n";
+			cout << F << "\n";
+			cout << G << "<---\n";
+			cout << L << "\n";
+			ShowSingleLinkedListInMenu(count);
+		}
+		else if (k == 8) {
+			cout << A << "\n";
+			cout << B << "\n";
+			cout << C << "\n";
+			cout << D << "\n";
+			cout << E << "\n";
+			cout << F << "\n";
+			cout << G << "\n";
+			cout << L << "<---\n";
+			ShowSingleLinkedListInMenu(count);
 		}
 
 
@@ -510,8 +608,14 @@ void StartMenu() {
 			numberOfElement = getValue();;
 			if (numberOfElement <= count && numberOfElement > 0) {
 				if (numberOfElement == 1) {
-					DeleteFirstElement();
-					count--;
+					if (count == 1) {
+						DeleteAllSingleLinkedList();
+						count = 0;
+					}
+					else {
+						DeleteFirstElement();
+						count--;
+					}
 				}
 				else {
 					DeleteElementToListByNumber(numberOfElement);
@@ -567,7 +671,17 @@ void StartMenu() {
 			cout << "No List ";
 			system("pause");
 		}
-			
+		else if (g == 7) {
+			count = FileRead();
+		}
+		else if (g == 8 && count != 0) {
+			FileWrite();
+		}
+		else if (g == 8 && count == 0) {
+			system("cls");
+			cout << "No List ";
+			system("pause");
+		}
 	}
 
 
@@ -578,17 +692,20 @@ void StartMenu() {
 
 
 
-
-
-
-
-
-
 int main()
 {	
 	StartMenu();
 	
-
+	/*AddElemenToList(1);
+	AddElemenToList(2);
+	AddElemenToList(3);
+	AddElemenToList(4);
+	AddElemenToList(5);
+	AddElemenToList(6);
+	AddElemenToList(7);
+	FileWrite();
+	FileRead();
+	ShowSingleLinkedList();*/
 
 
 }
